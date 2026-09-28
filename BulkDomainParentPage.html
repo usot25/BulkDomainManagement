@@ -1,0 +1,2697 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bulk Domain Management | OneTrust Cookie Consent</title>
+  <meta name="description"
+    content="Manage multiple similar domains with one parent CMP script, while consent stays separate for each domain." />
+  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --indigo: #4F46E5;
+      --indigo-600: #4338CA;
+      --indigo-50: #EEF2FF;
+      --indigo-100: #E0E7FF;
+      --aqua: #06B6D4;
+      --aqua-700: #0E7490;
+      --aqua-50: #ECFEFF;
+      --lime: #84CC16;
+      --lime-700: #4D7C0F;
+      --lime-50: #F7FEE7;
+      --coral: #FB7185;
+      --coral-700: #BE123C;
+      --coral-50: #FFF1F2;
+      --sun: #FACC15;
+      --sun-50: #FEFCE8;
+      --bg: #FBFBFD;
+      --white: #FFFFFF;
+      --ink: #1D1D1F;
+      /* Apple ink */
+      --ink-2: #515154;
+      /* 7.9:1 on white */
+      --ink-3: #6E6E73;
+      /* 5.0:1 on white — small labels only */
+      --line: #E5E5EA;
+      --line-2: #D2D2D7;
+
+      --r-md: 14px;
+      --r-lg: 22px;
+      --r-xl: 32px;
+      --r-pill: 9999px;
+      --sh-2: 0 10px 30px -10px rgba(29, 29, 31, .14);
+      --sh-3: 0 30px 60px -20px rgba(79, 70, 229, .30);
+      --ease: cubic-bezier(.22, 1, .36, 1);
+      --ease-io: cubic-bezier(.65, 0, .35, 1);
+
+      --display: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+      --container: 1240px;
+      --gutter: clamp(18px, 4vw, 48px);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-padding-top: 90px
+    }
+
+    html.lenis,
+    html.lenis body {
+      height: auto
+    }
+
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden
+    }
+
+    img,
+    svg {
+      display: block;
+      max-width: 100%
+    }
+
+    a {
+      color: var(--indigo);
+      text-underline-offset: 3px
+    }
+
+    a:hover {
+      color: var(--indigo-600)
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--indigo);
+      outline-offset: 3px;
+      border-radius: 8px
+    }
+
+    ::selection {
+      background: var(--sun);
+      color: var(--ink)
+    }
+
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 var(--gutter)
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 12px;
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: var(--r-pill);
+      z-index: 200
+    }
+
+    .skip:focus {
+      left: 12px
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap
+    }
+
+    /* ---------- Type ---------- */
+    .label {
+      font: 500 13px/1.2 var(--mono);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ink-3)
+    }
+
+    .label b {
+      color: var(--ink);
+      font-weight: 500
+    }
+
+    .display {
+      font-family: var(--display);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -.045em;
+      line-height: .9;
+      margin: 0
+    }
+
+    h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      letter-spacing: -.035em;
+      line-height: 1.02;
+      font-size: clamp(38px, 5.4vw, 80px);
+      margin: 0
+    }
+
+    h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      font-size: 22px;
+      line-height: 1.2;
+      margin: 0 0 8px
+    }
+
+    .lead {
+      font-size: clamp(19px, 1.6vw, 24px);
+      line-height: 1.45;
+      color: var(--ink-2);
+      max-width: 40ch;
+      letter-spacing: -.01em
+    }
+
+    .grad {
+      background: linear-gradient(100deg, var(--indigo) 0%, var(--aqua) 45%, var(--lime) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    :not(pre)>code {
+      font-family: var(--mono);
+      font-size: .84em;
+      background: var(--indigo-50);
+      color: var(--indigo-600);
+      padding: 2px 7px;
+      border-radius: 6px
+    }
+
+    /* ---------- Buttons (magnetic + morph fill) ---------- */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 0 28px;
+      border-radius: var(--r-pill);
+      font: 600 16px/1 var(--sans);
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform .5s var(--ease), color .4s var(--ease), border-color .4s
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      z-index: -1;
+      transform: translateY(101%);
+      transition: transform .5s var(--ease)
+    }
+
+    .btn:hover::before {
+      transform: none
+    }
+
+    .btn .arr {
+      display: inline-block;
+      transition: transform .5s var(--ease)
+    }
+
+    .btn:hover .arr {
+      transform: translateX(4px) rotate(-45deg)
+    }
+
+    .btn-dark {
+      background: var(--ink);
+      color: #fff
+    }
+
+    .btn-dark::before {
+      background: var(--indigo)
+    }
+
+    .btn-dark:hover {
+      color: #fff
+    }
+
+    .btn-line {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line-2)
+    }
+
+    .btn-line::before {
+      background: var(--ink)
+    }
+
+    .btn-line:hover {
+      color: #fff;
+      border-color: var(--ink)
+    }
+
+    .btn-sm {
+      min-height: 42px;
+      padding: 0 18px;
+      font-size: 14px
+    }
+
+    /* ---------- Preloader (Henri-style counter) ---------- */
+    .loader {
+      display: none
+    }
+
+    .js .loader {
+      display: flex;
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: var(--ink);
+      color: #fff;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--gutter);
+      transition: transform 1s var(--ease-io)
+    }
+
+    .loader .label {
+      color: #A1A1A6
+    }
+
+    .loader-count {
+      font: 800 clamp(90px, 18vw, 260px)/.8 var(--display);
+      letter-spacing: -.05em;
+      align-self: flex-end
+    }
+
+    .loader-bar {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 4px;
+      width: 0;
+      background: linear-gradient(90deg, var(--aqua), var(--lime), var(--sun), var(--coral))
+    }
+
+    .loaded .loader {
+      transform: translateY(-100%)
+    }
+
+    /* ---------- Custom cursor ---------- */
+    .cursor {
+      display: none
+    }
+
+    @media (pointer:fine) {
+      .js .cursor {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 140;
+        pointer-events: none;
+        width: 12px;
+        height: 12px;
+        margin: -6px 0 0 -6px;
+        border-radius: 50%;
+        background: var(--ink);
+        mix-blend-mode: difference;
+        background: #fff;
+        transition: width .35s var(--ease), height .35s var(--ease), margin .35s var(--ease)
+      }
+
+      .cursor.big {
+        width: 64px;
+        height: 64px;
+        margin: -32px 0 0 -32px
+      }
+    }
+
+    /* ---------- Nav (floating glass pill, morphing hover) ---------- */
+    .nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      width: min(calc(100% - 24px), 1100px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 18px;
+      border-radius: var(--r-pill);
+      background: rgba(255, 255, 255, .62);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border: 1px solid rgba(255, 255, 255, .7);
+      box-shadow: 0 1px 0 rgba(29, 29, 31, .04), var(--sh-2);
+      transition: transform .6s var(--ease)
+    }
+
+    .nav.hide {
+      transform: translate(-50%, -140%)
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font: 700 15px var(--display);
+      letter-spacing: -.01em;
+      text-decoration: none;
+      color: var(--ink);
+      white-space: nowrap
+    }
+
+    .mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: conic-gradient(from 210deg, var(--indigo), var(--aqua), var(--lime), var(--sun), var(--coral), var(--indigo));
+      display: grid;
+      place-items: center;
+      animation: spin 12s linear infinite
+    }
+
+    .mark i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #fff
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .nav-links {
+      position: relative;
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0
+    }
+
+    .nav-links a {
+      position: relative;
+      z-index: 1;
+      display: block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: var(--r-pill)
+    }
+
+    .nav-pill {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      border-radius: var(--r-pill);
+      background: var(--indigo-50);
+      opacity: 0;
+      transition: left .45s var(--ease), width .45s var(--ease), opacity .3s
+    }
+
+    .menu-btn {
+      display: none
+    }
+
+    @media (max-width:920px) {
+      .nav-links {
+        display: none
+      }
+
+      .menu-btn {
+        display: inline-flex
+      }
+
+      .nav.open .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-radius: var(--r-lg);
+        padding: 8px;
+        box-shadow: var(--sh-2)
+      }
+
+      .nav.open .nav-pill {
+        display: none
+      }
+    }
+
+    /* ---------- Sections ---------- */
+    section {
+      position: relative;
+      padding: clamp(96px, 12vw, 168px) 0
+    }
+
+    .sec-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 20px;
+      border-top: 1px solid var(--line-2);
+      padding-top: 18px;
+      margin-bottom: clamp(40px, 6vw, 80px)
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: flex-end;
+      padding: 140px 0 48px;
+      overflow: hidden
+    }
+
+    .aurora {
+      position: absolute;
+      inset: -20%;
+      z-index: -1;
+      filter: blur(60px) saturate(140%);
+      opacity: .75;
+      pointer-events: none
+    }
+
+    .aurora span {
+      position: absolute;
+      border-radius: 50%;
+      mix-blend-mode: multiply;
+      animation: float 20s var(--ease-io) infinite alternate
+    }
+
+    .aurora span:nth-child(1) {
+      width: 46vw;
+      height: 46vw;
+      left: 48%;
+      top: 4%;
+      background: var(--aqua)
+    }
+
+    .aurora span:nth-child(2) {
+      width: 38vw;
+      height: 38vw;
+      left: 66%;
+      top: 34%;
+      background: var(--sun);
+      animation-delay: -5s
+    }
+
+    .aurora span:nth-child(3) {
+      width: 34vw;
+      height: 34vw;
+      left: 36%;
+      top: 40%;
+      background: var(--coral);
+      opacity: .7;
+      animation-delay: -10s
+    }
+
+    .aurora span:nth-child(4) {
+      width: 30vw;
+      height: 30vw;
+      left: 78%;
+      top: 0;
+      background: var(--indigo);
+      opacity: .55;
+      animation-delay: -14s
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) scale(1)
+      }
+
+      50% {
+        transform: translate(-6vw, 4vw) scale(1.12)
+      }
+
+      100% {
+        transform: translate(3vw, -3vw) scale(.94)
+      }
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse at 30% 70%, #000 10%, transparent 65%);
+      -webkit-mask-image: radial-gradient(ellipse at 30% 70%, #000 10%, transparent 65%);
+      opacity: .7
+    }
+
+    .hero-inner {
+      width: 100%;
+      will-change: transform
+    }
+
+    .hero .display {
+      font-size: clamp(52px, 10.4vw, 168px)
+    }
+
+    .line {
+      display: block;
+      overflow: hidden;
+      padding-bottom: .04em
+    }
+
+    .line>span {
+      display: inline-block
+    }
+
+    .js .line>span {
+      transform: translateY(105%)
+    }
+
+    .loaded .line>span {
+      transform: none;
+      transition: transform 1.2s var(--ease)
+    }
+
+    .loaded .line:nth-child(2)>span {
+      transition-delay: .08s
+    }
+
+    .loaded .line:nth-child(3)>span {
+      transition-delay: .16s
+    }
+
+    .hero-foot {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr auto;
+      gap: 32px;
+      align-items: end;
+      margin-top: clamp(32px, 5vw, 64px)
+    }
+
+    .js .fade-up {
+      opacity: 0;
+      transform: translateY(20px)
+    }
+
+    .loaded .fade-up {
+      opacity: 1;
+      transform: none;
+      transition: opacity 1s var(--ease) .45s, transform 1s var(--ease) .45s
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px
+    }
+
+    .scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px
+    }
+
+    .scroll-hint i {
+      width: 1.5px;
+      height: 56px;
+      background: linear-gradient(var(--ink), transparent);
+      animation: drop 1.8s var(--ease-io) infinite;
+      transform-origin: top
+    }
+
+    @keyframes drop {
+      0% {
+        transform: scaleY(0)
+      }
+
+      50% {
+        transform: scaleY(1)
+      }
+
+      100% {
+        transform: scaleY(1);
+        opacity: 0
+      }
+    }
+
+    @media (max-width:900px) {
+      .hero-foot {
+        grid-template-columns: 1fr
+      }
+
+      .scroll-hint {
+        display: none
+      }
+    }
+
+    /* ---------- Marquee ---------- */
+    .marquee {
+      padding: 28px 0;
+      border-block: 1px solid var(--line-2);
+      overflow: hidden;
+      background: var(--white)
+    }
+
+    .track {
+      display: flex;
+      width: max-content;
+      animation: mq 34s linear infinite
+    }
+
+    .marquee:hover .track {
+      animation-play-state: paused
+    }
+
+    .track span {
+      font: 800 clamp(34px, 5vw, 64px)/1 var(--display);
+      text-transform: uppercase;
+      letter-spacing: -.03em;
+      padding-right: 48px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      white-space: nowrap
+    }
+
+    .track span::after {
+      content: "";
+      width: .5em;
+      height: .5em;
+      border-radius: 50%;
+      background: var(--c, var(--aqua))
+    }
+
+    .track span:nth-child(4n+2) {
+      --c: var(--sun)
+    }
+
+    .track span:nth-child(4n+3) {
+      --c: var(--coral)
+    }
+
+    .track span:nth-child(4n+4) {
+      --c: var(--lime)
+    }
+
+    .track span.o {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--ink)
+    }
+
+    @keyframes mq {
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* ---------- Challenge: scrubbed statement + counter ---------- */
+    .statement {
+      font-family: var(--display);
+      font-weight: 700;
+      letter-spacing: -.035em;
+      line-height: 1.08;
+      font-size: clamp(32px, 4.6vw, 68px);
+      max-width: 20ch;
+      margin: 0
+    }
+
+    .statement .w {
+      opacity: .16;
+      transition: opacity .2s
+    }
+
+    .no-split .statement .w {
+      opacity: 1
+    }
+
+    .counter-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: clamp(56px, 8vw, 112px)
+    }
+
+    @media (max-width:820px) {
+      .counter-wrap {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .cbox {
+      border-radius: var(--r-xl);
+      padding: clamp(24px, 3vw, 40px);
+      background: var(--white);
+      border: 1px solid var(--line);
+      min-height: 340px;
+      display: flex;
+      flex-direction: column
+    }
+
+    .cbox.after {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink)
+    }
+
+    .cbox.after .label {
+      color: #A1A1A6
+    }
+
+    .big-num {
+      font: 800 clamp(88px, 12vw, 180px)/.85 var(--display);
+      letter-spacing: -.06em;
+      margin: 18px 0 8px;
+      font-variant-numeric: tabular-nums
+    }
+
+    .dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: auto;
+      padding-top: 18px
+    }
+
+    .dots i {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      background: var(--coral);
+      animation: pop .4s var(--ease) both
+    }
+
+    .cbox.after .dots i {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: conic-gradient(var(--aqua), var(--lime), var(--sun), var(--aqua))
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(0)
+      }
+    }
+
+    .range {
+      margin-top: 28px;
+      max-width: 560px
+    }
+
+    .range label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 10px
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 28px;
+      accent-color: var(--indigo)
+    }
+
+    /* ---------- Story: Apple-style sticky scroll + animated beam ---------- */
+    .story {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: clamp(24px, 5vw, 80px)
+    }
+
+    .stage {
+      position: sticky;
+      top: 12vh;
+      height: 76vh;
+      border-radius: var(--r-xl);
+      background: var(--white);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    .stage-top {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .stage svg {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      padding: 16px
+    }
+
+    .steps {
+      padding: 12vh 0 20vh
+    }
+
+    .step {
+      min-height: 64vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: .28;
+      transition: opacity .6s var(--ease)
+    }
+
+    .step.active {
+      opacity: 1
+    }
+
+    .step .num {
+      font: 800 clamp(64px, 8vw, 120px)/.9 var(--display);
+      letter-spacing: -.05em;
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--ink);
+      margin-bottom: 18px
+    }
+
+    .step.active .num {
+      color: var(--ink);
+      -webkit-text-stroke: 0
+    }
+
+    .step h3 {
+      font-size: clamp(28px, 3vw, 42px);
+      letter-spacing: -.03em;
+      margin-bottom: 14px
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--ink-2);
+      max-width: 40ch
+    }
+
+    @media (max-width:900px) {
+      .story {
+        grid-template-columns: 1fr
+      }
+
+      .stage {
+        position: relative;
+        top: 0;
+        height: auto;
+        aspect-ratio: 1/1
+      }
+
+      .steps {
+        padding: 24px 0
+      }
+
+      .step {
+        min-height: auto;
+        opacity: 1;
+        padding: 28px 0;
+        border-top: 1px solid var(--line)
+      }
+    }
+
+    /* beam states */
+    .n-parent rect {
+      fill: var(--ink);
+      transition: fill .6s
+    }
+
+    .n-parent text {
+      fill: #fff;
+      font: 600 13px var(--mono)
+    }
+
+    .ring {
+      fill: none;
+      stroke: var(--aqua);
+      stroke-width: 2;
+      opacity: 0;
+      transform-origin: 200px 70px;
+      transform-box: view-box
+    }
+
+    .s1 .ring {
+      animation: ring 2.2s var(--ease) infinite
+    }
+
+    @keyframes ring {
+      0% {
+        opacity: .9;
+        transform: scale(1)
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(1.9)
+      }
+    }
+
+    .badge-scan {
+      opacity: 0;
+      transition: opacity .6s .2s
+    }
+
+    .s1 .badge-scan {
+      opacity: 1
+    }
+
+    .beam-base {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 2
+    }
+
+    .beam {
+      fill: none;
+      stroke: url(#beamGrad);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      transition: stroke-dashoffset 1.2s var(--ease)
+    }
+
+    .s2 .beam {
+      stroke-dashoffset: 0
+    }
+
+    .s2 .beam:nth-of-type(2) {
+      transition-delay: .1s
+    }
+
+    .s2 .beam:nth-of-type(3) {
+      transition-delay: .2s
+    }
+
+    .s2 .beam:nth-of-type(4) {
+      transition-delay: .3s
+    }
+
+    .pulse {
+      opacity: 0;
+      transition: opacity .4s
+    }
+
+    .s2 .pulse {
+      opacity: 1
+    }
+
+    .n-dom rect {
+      fill: var(--white);
+      stroke: var(--line-2);
+      stroke-width: 1.5;
+      transition: stroke .5s, fill .5s
+    }
+
+    .n-dom text {
+      font: 500 11px var(--mono);
+      fill: var(--ink-3);
+      transition: fill .5s
+    }
+
+    .s2 .n-dom rect {
+      stroke: var(--indigo);
+      fill: var(--indigo-50)
+    }
+
+    .s2 .n-dom text {
+      fill: var(--ink)
+    }
+
+    .cons {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .5s, transform .5s var(--ease);
+      transform-box: fill-box
+    }
+
+    .s3 .cons {
+      opacity: 1;
+      transform: none
+    }
+
+    .s3 .cons:nth-of-type(2) {
+      transition-delay: .12s
+    }
+
+    .s3 .cons:nth-of-type(3) {
+      transition-delay: .24s
+    }
+
+    .s3 .cons:nth-of-type(4) {
+      transition-delay: .36s
+    }
+
+    .cons text {
+      font: 600 11px var(--sans)
+    }
+
+    .stage-cap {
+      padding: 14px 24px;
+      border-top: 1px solid var(--line);
+      font-size: 15px;
+      color: var(--ink-2);
+      min-height: 54px
+    }
+
+    /* ---------- Morphing tabs ---------- */
+    .tabs {
+      margin-top: clamp(48px, 6vw, 80px);
+      border-radius: var(--r-xl);
+      background: var(--white);
+      border: 1px solid var(--line);
+      overflow: hidden
+    }
+
+    [role=tablist] {
+      position: relative;
+      display: flex;
+      gap: 2px;
+      margin: 10px;
+      padding: 5px;
+      background: #F2F2F7;
+      border-radius: var(--r-pill);
+      overflow-x: auto;
+      width: max-content;
+      max-width: calc(100% - 20px)
+    }
+
+    .tab-pill {
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      border-radius: var(--r-pill);
+      background: var(--white);
+      box-shadow: 0 2px 8px rgba(29, 29, 31, .1);
+      transition: left .5s var(--ease), width .5s var(--ease)
+    }
+
+    [role=tab] {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      min-height: 40px;
+      padding: 0 20px;
+      border: 0;
+      background: none;
+      border-radius: var(--r-pill);
+      font: 600 14px var(--sans);
+      color: var(--ink-2);
+      cursor: pointer
+    }
+
+    [role=tab][aria-selected=true] {
+      color: var(--ink)
+    }
+
+    [role=tabpanel] {
+      padding: 12px 32px 32px
+    }
+
+    [role=tabpanel]:not([hidden]) {
+      animation: panel .6s var(--ease)
+    }
+
+    @keyframes panel {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px)
+      }
+    }
+
+    [role=tabpanel] p,
+    [role=tabpanel] li {
+      font-size: 17px;
+      color: var(--ink-2)
+    }
+
+    .code {
+      position: relative;
+      background: #0B0B12;
+      color: #E5E5EA;
+      border-radius: var(--r-lg);
+      padding: 22px 24px;
+      overflow: auto;
+      font: 400 14px/1.75 var(--mono)
+    }
+
+    .code pre {
+      margin: 0
+    }
+
+    .code .k {
+      color: #67E8F9
+    }
+
+    .code .s {
+      color: #BEF264
+    }
+
+    .code .c {
+      color: #A1A1A6
+    }
+
+    .code .b {
+      color: #FDE68A
+    }
+
+    .copy {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      min-height: 32px;
+      padding: 0 14px;
+      border-radius: var(--r-pill);
+      border: 1px solid #3A3A3C;
+      background: #1C1C1E;
+      color: #fff;
+      font: 600 12px var(--sans);
+      cursor: pointer
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      background: var(--sun-50);
+      border: 1px solid #FEF08A;
+      font-size: 15px
+    }
+
+    /* ---------- Benefits: indexed rows (Henri) ---------- */
+    .rows {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--line-2)
+    }
+
+    .row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 90px 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: clamp(24px, 3vw, 40px) 0;
+      border-bottom: 1px solid var(--line-2);
+      isolation: isolate;
+      overflow: hidden
+    }
+
+    .row::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--c);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform .6s var(--ease)
+    }
+
+    .row:hover::before {
+      transform: scaleY(1)
+    }
+
+    .row:nth-child(1) {
+      --c: var(--aqua-50)
+    }
+
+    .row:nth-child(2) {
+      --c: var(--sun-50)
+    }
+
+    .row:nth-child(3) {
+      --c: var(--lime-50)
+    }
+
+    .row .label {
+      padding-left: 8px
+    }
+
+    .row h3 {
+      font-size: clamp(28px, 3.6vw, 54px);
+      letter-spacing: -.04em;
+      margin: 0;
+      transition: transform .6s var(--ease)
+    }
+
+    .row:hover h3 {
+      transform: translateX(12px)
+    }
+
+    .row p {
+      margin: 0;
+      color: var(--ink-2);
+      max-width: 38ch;
+      padding-right: 8px
+    }
+
+    @media (max-width:760px) {
+      .row {
+        grid-template-columns: 1fr;
+        gap: 8px
+      }
+    }
+
+    /* ---------- Spotlight consent demo (Inspira) ---------- */
+    .band-dark {
+      background: var(--ink);
+      color: #fff
+    }
+
+    .band-dark .label {
+      color: #A1A1A6
+    }
+
+    .band-dark .sec-top {
+      border-color: #3A3A3C
+    }
+
+    .band-dark .lead {
+      color: #C7C7CC
+    }
+
+    .demo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 48px
+    }
+
+    @media (max-width:900px) {
+      .demo {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media (max-width:480px) {
+      .demo {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .spot {
+      --x: 50%;
+      --y: 50%;
+      position: relative;
+      border-radius: var(--r-lg);
+      padding: 24px;
+      background: #141418;
+      border: 1px solid #2C2C2E;
+      overflow: hidden;
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color .5s
+    }
+
+    .spot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(360px circle at var(--x) var(--y), rgba(103, 232, 249, .16), transparent 45%);
+      opacity: 0;
+      transition: opacity .4s;
+      pointer-events: none
+    }
+
+    .spot:hover::before {
+      opacity: 1
+    }
+
+    .spot .host {
+      font: 500 14px var(--mono);
+      word-break: break-all
+    }
+
+    .spot .state {
+      margin: 14px 0 auto;
+      display: inline-flex;
+      align-self: flex-start;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--r-pill);
+      font-size: 13px;
+      font-weight: 600;
+      background: #2C2C2E;
+      color: #E5E5EA;
+      transition: background .4s, color .4s
+    }
+
+    .spot .state i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #8E8E93
+    }
+
+    .spot.accepted {
+      border-color: var(--lime)
+    }
+
+    .spot.accepted .state {
+      background: var(--lime);
+      color: #1A2E05
+    }
+
+    .spot.accepted .state i {
+      background: #1A2E05
+    }
+
+    .spot.rejected {
+      border-color: var(--coral)
+    }
+
+    .spot.rejected .state {
+      background: var(--coral);
+      color: #4C0519
+    }
+
+    .spot.rejected .state i {
+      background: #4C0519
+    }
+
+    .spot .acts {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px
+    }
+
+    .chipbtn {
+      flex: 1;
+      min-height: 40px;
+      border-radius: var(--r-pill);
+      border: 1px solid #3A3A3C;
+      background: transparent;
+      color: #fff;
+      font: 600 13px var(--sans);
+      cursor: pointer;
+      transition: background .3s, border-color .3s
+    }
+
+    .chipbtn:hover {
+      background: #fff;
+      color: var(--ink);
+      border-color: #fff
+    }
+
+    .script-tag {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      background: #141418;
+      border: 1px dashed #3A3A3C;
+      font: 500 14px var(--mono);
+      color: #C7C7CC;
+      flex-wrap: wrap
+    }
+
+    .script-tag b {
+      color: #67E8F9;
+      font-weight: 500
+    }
+
+    .demo-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 18px
+    }
+
+    #simStatus {
+      color: #C7C7CC;
+      font-size: 16px
+    }
+
+    .band-dark .btn-line {
+      color: #fff;
+      border-color: #48484A
+    }
+
+    .band-dark .btn-line::before {
+      background: #fff
+    }
+
+    .band-dark .btn-line:hover {
+      color: var(--ink)
+    }
+
+    /* ---------- Fit check ---------- */
+    .fit {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      align-items: start
+    }
+
+    @media (max-width:900px) {
+      .fit {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      padding: 12px
+    }
+
+    fieldset {
+      border: 0;
+      margin: 0;
+      padding: 0
+    }
+
+    legend {
+      padding: 18px 18px 6px;
+      font: 500 13px var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--ink-3)
+    }
+
+    .opt {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      cursor: pointer;
+      transition: background .25s
+    }
+
+    .opt:hover {
+      background: #F5F5F7
+    }
+
+    .opt input {
+      appearance: none;
+      -webkit-appearance: none;
+      flex: none;
+      width: 24px;
+      height: 24px;
+      margin-top: 2px;
+      border-radius: 8px;
+      border: 1.5px solid var(--line-2);
+      background: #fff;
+      display: grid;
+      place-items: center;
+      transition: background .3s var(--ease), border-color .3s;
+      cursor: pointer
+    }
+
+    .opt input::after {
+      content: "";
+      width: 10px;
+      height: 6px;
+      border: 2.5px solid #fff;
+      border-top: 0;
+      border-right: 0;
+      transform: rotate(-45deg) scale(0);
+      margin-top: -3px;
+      transition: transform .3s var(--ease)
+    }
+
+    .opt input:checked {
+      background: var(--indigo);
+      border-color: var(--indigo)
+    }
+
+    .opt input:checked::after {
+      transform: rotate(-45deg) scale(1)
+    }
+
+    .opt input:focus-visible {
+      outline: 3px solid var(--indigo);
+      outline-offset: 2px
+    }
+
+    .opt span {
+      font-size: 17px
+    }
+
+    .opt small {
+      display: block;
+      color: var(--ink-3);
+      font-size: 14px
+    }
+
+    .result {
+      position: sticky;
+      top: 100px;
+      border-radius: var(--r-xl);
+      padding: clamp(28px, 3vw, 40px);
+      background: var(--white);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      isolation: isolate;
+      transition: background .5s
+    }
+
+    .result::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      z-index: -1;
+      opacity: 0;
+      filter: blur(50px);
+      transition: opacity .6s, background .6s
+    }
+
+    .result[data-state=good]::before {
+      opacity: .5;
+      background: radial-gradient(circle at 70% 20%, var(--lime), transparent 55%), radial-gradient(circle at 20% 90%, var(--aqua), transparent 50%)
+    }
+
+    .result[data-state=review]::before {
+      opacity: .45;
+      background: radial-gradient(circle at 70% 20%, var(--sun), transparent 55%)
+    }
+
+    .result[data-state=other]::before {
+      opacity: .4;
+      background: radial-gradient(circle at 70% 20%, var(--coral), transparent 55%)
+    }
+
+    .result h3 {
+      font-size: clamp(30px, 3vw, 44px);
+      letter-spacing: -.04em;
+      margin: 14px 0
+    }
+
+    .meter {
+      height: 8px;
+      border-radius: var(--r-pill);
+      background: #F2F2F7;
+      overflow: hidden;
+      margin: 0 0 18px
+    }
+
+    .meter i {
+      display: block;
+      height: 100%;
+      width: var(--w, 0%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--coral), var(--sun), var(--lime));
+      transition: width .8s var(--ease)
+    }
+
+    .result p {
+      font-size: 16px;
+      color: var(--ink-2);
+      margin: 0 0 12px
+    }
+
+    .link-arrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--ink)
+    }
+
+    .link-arrow span {
+      transition: transform .5s var(--ease)
+    }
+
+    .link-arrow:hover span {
+      transform: translateX(6px)
+    }
+
+    .hostcheck {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      padding: clamp(24px, 3vw, 40px)
+    }
+
+    @media (max-width:900px) {
+      .hostcheck {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .field label {
+      display: block;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 8px
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      min-height: 54px;
+      padding: 14px 16px;
+      border: 1.5px solid var(--line-2);
+      border-radius: var(--r-md);
+      font: 500 15px var(--mono);
+      color: var(--ink);
+      background: var(--bg);
+      transition: border-color .3s, box-shadow .3s
+    }
+
+    .field textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.7
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 4px var(--indigo-100)
+    }
+
+    .host-out {
+      margin-top: 14px;
+      padding: 16px 18px;
+      border-radius: var(--r-md);
+      font-size: 15px;
+      font-weight: 600;
+      background: #F5F5F7;
+      transition: background .4s, color .4s
+    }
+
+    .host-out.ok {
+      background: var(--lime-50);
+      color: var(--lime-700)
+    }
+
+    .host-out.no {
+      background: var(--coral-50);
+      color: var(--coral-700)
+    }
+
+    /* ---------- Considerations: indexed list ---------- */
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 40px;
+      counter-reset: c
+    }
+
+    @media (max-width:820px) {
+      .list {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .list li {
+      counter-increment: c;
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 12px;
+      padding: 22px 0;
+      border-top: 1px solid var(--line-2);
+      font-size: 18px;
+      transition: padding .5s var(--ease)
+    }
+
+    .list li::before {
+      content: "(" counter(c, decimal-leading-zero) ")";
+      font: 500 13px/1.9 var(--mono);
+      color: var(--ink-3)
+    }
+
+    .list li:hover {
+      padding-left: 10px
+    }
+
+    /* ---------- References ---------- */
+    .refs {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--line-2)
+    }
+
+    .refs a {
+      position: relative;
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 26px 8px;
+      border-bottom: 1px solid var(--line-2);
+      text-decoration: none;
+      color: var(--ink);
+      isolation: isolate;
+      overflow: hidden
+    }
+
+    .refs a::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--ink);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform .55s var(--ease)
+    }
+
+    .refs a:hover::before,
+    .refs a:focus-visible::before {
+      transform: scaleY(1)
+    }
+
+    .refs a:hover,
+    .refs a:focus-visible {
+      color: #fff
+    }
+
+    .refs a:hover .label,
+    .refs a:focus-visible .label {
+      color: #A1A1A6
+    }
+
+    .refs b {
+      font: 700 clamp(22px, 2.6vw, 36px)/1.1 var(--display);
+      letter-spacing: -.03em
+    }
+
+    .refs small {
+      display: block;
+      font-size: 15px;
+      color: var(--ink-3);
+      margin-top: 4px;
+      transition: color .4s
+    }
+
+    .refs a:hover small {
+      color: #C7C7CC
+    }
+
+    .refs .go {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      transition: transform .55s var(--ease), background .4s
+    }
+
+    .refs a:hover .go {
+      transform: rotate(-45deg);
+      background: var(--sun);
+      color: var(--ink);
+      border-color: var(--sun)
+    }
+
+    .tag-int {
+      color: #854D0E
+    }
+
+    @media (max-width:760px) {
+      .refs a {
+        grid-template-columns: 1fr auto
+      }
+
+      .refs a .label {
+        grid-column: 1/-1
+      }
+    }
+
+    /* ---------- Final CTA ---------- */
+    .final {
+      overflow: hidden;
+      padding-bottom: 0
+    }
+
+    .final .big {
+      font: 800 clamp(90px, 20vw, 340px)/.82 var(--display);
+      letter-spacing: -.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      will-change: transform
+    }
+
+    .final .big span {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--ink)
+    }
+
+    .final-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: end;
+      margin-top: clamp(40px, 6vw, 80px);
+      padding-bottom: clamp(64px, 8vw, 120px)
+    }
+
+    @media (max-width:820px) {
+      .final-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    footer {
+      background: var(--ink);
+      color: #A1A1A6;
+      padding: 40px 0 28px;
+      font-size: 14px;
+      overflow: hidden
+    }
+
+    .foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap
+    }
+
+    footer a {
+      color: #fff
+    }
+
+    .wordmark {
+      font: 800 clamp(56px, 13.5vw, 220px)/.8 var(--display);
+      letter-spacing: -.06em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-top: 40px;
+      white-space: nowrap
+    }
+
+    .wordmark .grad {
+      background: linear-gradient(100deg, var(--aqua), var(--lime), var(--sun), var(--coral));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    /* ---------- Reveal ---------- */
+    .js .rv {
+      opacity: 0;
+      transform: translateY(40px)
+    }
+
+    .rv.in {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: opacity 1.1s var(--ease), transform 1.1s var(--ease)
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important
+      }
+
+      .js .loader {
+        display: none
+      }
+
+      .js .line>span,
+      .js .fade-up,
+      .js .rv {
+        transform: none;
+        opacity: 1
+      }
+
+      .statement .w {
+        opacity: 1 !important
+      }
+
+      .pulse {
+        display: none
+      }
+
+      .cursor {
+        display: none !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="loader" aria-hidden="true">
+    <div class="label">OneTrust Cookie Consent — Bulk Domain Management</div>
+    <div class="loader-count" id="ldCount">0</div>
+    <div class="loader-bar" id="ldBar"></div>
+  </div>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <a href="#top" class="brand" aria-label="Bulk Domain Management, back to top"><span class="mark"
+        aria-hidden="true"><i></i></span>Bulk Domain Management</a>
+    <nav aria-label="Primary">
+      <ul class="nav-links" id="navLinks">
+        <li class="nav-pill" id="navPill" aria-hidden="true"></li>
+        <li><a href="#challenge">Challenge</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#benefits">Benefits</a></li>
+        <li><a href="#fit">Fit check</a></li>
+        <li><a href="#considerations">Considerations</a></li>
+      </ul>
+    </nav>
+    <div style="display:flex;gap:6px">
+      <button class="btn btn-line btn-sm menu-btn" id="menuBtn" type="button" aria-expanded="false"
+        aria-controls="navLinks"><span>Menu</span></button>
+      <a class="btn btn-dark btn-sm mag" href="https://developer.onetrust.com/onetrust/docs/bulk-domain-management"
+        target="_blank" rel="noopener noreferrer"><span>Guide</span> <span class="arr" aria-hidden="true">→</span><span
+          class="sr-only">(opens in new tab)</span></a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- 1. HERO -->
+    <section class="hero" id="top">
+      <div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div class="grid-bg" aria-hidden="true"></div>
+      <div class="container hero-inner" id="heroInner">
+        <p class="label fade-up" style="margin:0 0 24px"><b>(OneTrust Cookie Consent)</b> &nbsp;·&nbsp; Bulk Domain
+          Management</p>
+        <h1 class="display" aria-label="Manage multiple domains with one CMP script">
+          <span class="line" aria-hidden="true"><span>Many domains.</span></span>
+          <span class="line" aria-hidden="true"><span class="grad">One CMP</span></span>
+          <span class="line" aria-hidden="true"><span>script.</span></span>
+        </h1>
+        <div class="hero-foot">
+          <p class="lead fade-up" style="margin:0">Bring websites with similar tracking technology configurations into a
+            domain group. Deploy the parent domain's script across the group and simplify ongoing script management,
+            while keeping consent separate on each domain.</p>
+          <div class="cta-row fade-up">
+            <a class="btn btn-dark mag" href="https://developer.onetrust.com/onetrust/docs/bulk-domain-management"
+              target="_blank" rel="noopener noreferrer"><span>Explore the implementation guide</span> <span class="arr"
+                aria-hidden="true">→</span><span class="sr-only">(opens in new tab)</span></a>
+            <a class="btn btn-line mag" href="#fit"><span>See if domain groups fit your sites</span></a>
+          </div>
+          <div class="scroll-hint fade-up" aria-hidden="true"><span class="label">Scroll</span><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee" aria-hidden="true">
+      <div class="track">
+        <span>One parent script</span><span class="o">Consent per domain</span><span>Inherited templates</span><span
+          class="o">Geolocation rules</span>
+        <span>One parent script</span><span class="o">Consent per domain</span><span>Inherited templates</span><span
+          class="o">Geolocation rules</span>
+      </div>
+    </div>
+
+    <!-- 2. CHALLENGE -->
+    <section id="challenge">
+      <div class="container">
+        <div class="sec-top rv"><span class="label"><b>(01)</b> The challenge</span><span class="label">Many
+            sites</span></div>
+        <h2 class="sr-only">Many sites. Too many scripts to manage.</h2>
+        <p class="statement" id="statement">Many sites. Too many scripts to manage. When related websites use similar
+          tracking technologies, a separate CMP script for every domain adds operational overhead.</p>
+
+        <div class="range rv" style="margin-top:56px">
+          <label for="siteCount"><span>How many similar sites do you manage?</span><output id="siteOut"
+              for="siteCount">12</output></label>
+          <input type="range" id="siteCount" min="2" max="80" value="12" />
+        </div>
+        <div class="counter-wrap">
+          <div class="cbox rv">
+            <span class="label">Script per domain</span>
+            <div class="big-num" id="beforeNum">12</div>
+            <p style="margin:0;color:var(--ink-2)">scripts to update, publish and track separately</p>
+            <div class="dots" id="beforeDots" aria-hidden="true"></div>
+          </div>
+          <div class="cbox after rv">
+            <span class="label">Domain group</span>
+            <div class="big-num">1</div>
+            <p style="margin:0;color:#C7C7CC">parent script to maintain. Grouped sites use the same script.</p>
+            <div class="dots" aria-hidden="true"><i></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. HOW IT WORKS: sticky story -->
+    <section id="how" style="padding-top:0">
+      <div class="container">
+        <div class="sec-top rv"><span class="label"><b>(02)</b> How it works</span><span class="label">3 steps</span>
+        </div>
+        <h2 class="rv" style="max-width:14ch">One script across the group. <span class="grad">Consent per domain.</span>
+        </h2>
+
+        <div class="story">
+          <div class="stage" aria-hidden="true">
+            <div class="stage-top"><span class="label" id="stageLbl">Step 01 / 03</span><span class="label">Domain
+                group</span></div>
+            <svg viewBox="0 0 400 380" id="beamSvg" class="s1">
+              <defs>
+                <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#4F46E5" />
+                  <stop offset=".55" stop-color="#06B6D4" />
+                  <stop offset="1" stop-color="#84CC16" />
+                </linearGradient>
+              </defs>
+              <circle class="ring" cx="200" cy="70" r="46" />
+              <g class="n-parent">
+                <rect x="110" y="44" width="180" height="52" rx="14" /><text x="200" y="75"
+                  text-anchor="middle">parent-domain.com</text>
+              </g>
+              <g class="badge-scan">
+                <rect x="236" y="30" width="72" height="24" rx="12" fill="#84CC16" /><text x="272" y="46"
+                  text-anchor="middle" style="font:700 11px Inter,sans-serif;fill:#1A2E05">✓ Scanned</text>
+              </g>
+
+              <path class="beam-base" d="M200 96 C200 190 50 180 50 262" />
+              <path class="beam-base" d="M200 96 C200 190 150 180 150 262" />
+              <path class="beam-base" d="M200 96 C200 190 250 180 250 262" />
+              <path class="beam-base" d="M200 96 C200 190 350 180 350 262" />
+              <g>
+                <path class="beam" id="b1" pathLength="1" d="M200 96 C200 190 50 180 50 262" />
+                <path class="beam" id="b2" pathLength="1" d="M200 96 C200 190 150 180 150 262" />
+                <path class="beam" id="b3" pathLength="1" d="M200 96 C200 190 250 180 250 262" />
+                <path class="beam" id="b4" pathLength="1" d="M200 96 C200 190 350 180 350 262" />
+              </g>
+              <g class="pulse">
+                <circle r="4" fill="#06B6D4">
+                  <animateMotion dur="2.2s" repeatCount="indefinite">
+                    <mpath href="#b1" />
+                  </animateMotion>
+                </circle>
+                <circle r="4" fill="#06B6D4">
+                  <animateMotion dur="2.2s" begin=".4s" repeatCount="indefinite">
+                    <mpath href="#b2" />
+                  </animateMotion>
+                </circle>
+                <circle r="4" fill="#06B6D4">
+                  <animateMotion dur="2.2s" begin=".8s" repeatCount="indefinite">
+                    <mpath href="#b3" />
+                  </animateMotion>
+                </circle>
+                <circle r="4" fill="#06B6D4">
+                  <animateMotion dur="2.2s" begin="1.2s" repeatCount="indefinite">
+                    <mpath href="#b4" />
+                  </animateMotion>
+                </circle>
+              </g>
+
+              <g class="n-dom">
+                <rect x="8" y="262" width="84" height="40" rx="12" /><text x="50" y="286"
+                  text-anchor="middle">site-a.com</text>
+              </g>
+              <g class="n-dom">
+                <rect x="108" y="262" width="84" height="40" rx="12" /><text x="150" y="286"
+                  text-anchor="middle">site-b.com</text>
+              </g>
+              <g class="n-dom">
+                <rect x="208" y="262" width="84" height="40" rx="12" /><text x="250" y="286"
+                  text-anchor="middle">site-c.co.uk</text>
+              </g>
+              <g class="n-dom">
+                <rect x="308" y="262" width="84" height="40" rx="12" /><text x="350" y="286"
+                  text-anchor="middle">shop.site-d</text>
+              </g>
+
+              <g>
+                <g class="cons">
+                  <rect x="14" y="316" width="72" height="24" rx="12" fill="#84CC16" /><text x="50" y="332"
+                    text-anchor="middle" fill="#1A2E05">Accepted</text>
+                </g>
+                <g class="cons">
+                  <rect x="114" y="316" width="72" height="24" rx="12" fill="#FB7185" /><text x="150" y="332"
+                    text-anchor="middle" fill="#4C0519">Rejected</text>
+                </g>
+                <g class="cons">
+                  <rect x="214" y="316" width="72" height="24" rx="12" fill="#E5E5EA" /><text x="250" y="332"
+                    text-anchor="middle" fill="#1D1D1F">No choice</text>
+                </g>
+                <g class="cons">
+                  <rect x="314" y="316" width="72" height="24" rx="12" fill="#84CC16" /><text x="350" y="332"
+                    text-anchor="middle" fill="#1A2E05">Accepted</text>
+                </g>
+              </g>
+            </svg>
+            <div class="stage-cap" id="stageCap">The parent domain is scanned. Its published script and configuration
+              serve the group.</div>
+          </div>
+
+          <div class="steps">
+            <article class="step active" data-step="1">
+              <div class="num" aria-hidden="true">01</div>
+              <h3>Choose a parent domain</h3>
+              <p>Its published script and configuration serve the group. The parent domain must be scanned in OneTrust.
+              </p>
+            </article>
+            <article class="step" data-step="2">
+              <div class="num" aria-hidden="true">02</div>
+              <h3>Create a domain group</h3>
+              <p>Associate the relevant domain hostnames with the parent script using the API, then publish the parent's
+                production script.</p>
+            </article>
+            <article class="step" data-step="3">
+              <div class="num" aria-hidden="true">03</div>
+              <h3>Deploy and validate</h3>
+              <p>Use the parent script on grouped websites and verify that each domain records consent independently.
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <!-- Morphing tabs -->
+        <div class="tabs rv">
+          <div role="tablist" aria-label="Setup details" id="tablist">
+            <span class="tab-pill" id="tabPill" aria-hidden="true"></span>
+            <button role="tab" id="t1" aria-controls="p1" aria-selected="true">Create group</button>
+            <button role="tab" id="t2" aria-controls="p2" aria-selected="false" tabindex="-1">Add domains</button>
+            <button role="tab" id="t3" aria-controls="p3" aria-selected="false" tabindex="-1">Validate</button>
+            <button role="tab" id="t4" aria-controls="p4" aria-selected="false" tabindex="-1">Leave a group</button>
+          </div>
+          <div role="tabpanel" id="p1" aria-labelledby="t1" tabindex="0">
+            <p>Create the domain group with the <a
+                href="https://developer.onetrust.com/onetrust/reference/createdomaingroupusingpost" target="_blank"
+                rel="noopener noreferrer">Create Domain Group API</a>. Add hostnames without the protocol, then publish
+              the parent's <strong>production</strong> script so the group can take effect.</p>
+            <div class="note"><strong>Tip:</strong> If the domain list returns a blob error, the parent's production
+              script may not be published yet.</div>
+          </div>
+          <div role="tabpanel" id="p2" aria-labelledby="t2" tabindex="0" hidden>
+            <p>When adding new domains to an existing group, set <code>removeExisting</code> to <code>false</code> to
+              keep the current domains and add the new ones.</p>
+            <div class="code"><button class="copy" type="button" data-copy="c2">Copy</button>
+              <pre id="c2"><span class="k">let</span> body = JSON.stringify({
+  <span class="s">"removeExisting"</span>: <span class="b">false</span>,
+  <span class="s">"urls"</span>: [<span class="s">"test1.com"</span>, <span class="s">"test2.com"</span>, <span class="s">"test3.com"</span>]
+});</pre>
+            </div>
+            <div class="note"><strong>Watch out:</strong> setting it to <code>true</code>, or leaving it out, can
+              replace the existing domain list.</div>
+          </div>
+          <div role="tabpanel" id="p3" aria-labelledby="t3" tabindex="0" hidden>
+            <p>Check whether a URL belongs to the group, then view the full domain list in a browser.</p>
+            <div class="code"><button class="copy" type="button" data-copy="c3">Copy</button>
+              <pre id="c3"><span class="c"># Check a URL (headers: location, domainId, url)</span>
+<span class="k">GET</span> https://cookies-data.onetrust.io/bannersdk/v1/domaingroupcheck
+<span class="c"># Response → { "isValid": true }</span>
+
+<span class="c"># List every domain in the group</span>
+https://cdn.cookielaw.org/consent/<span class="b">{domainId}</span>/domain-list.json</pre>
+            </div>
+            <div class="note"><strong>Tip:</strong> check the Network tab to confirm which domain's script loads on each
+              site.</div>
+          </div>
+          <div role="tabpanel" id="p4" aria-labelledby="t4" tabindex="0" hidden>
+            <p>To move away from Bulk Domain Management, each domain needs a standard setup:</p>
+            <ol style="margin:0;padding-left:22px">
+              <li>Scan each domain in the group individually.</li>
+              <li>Set up templates and geolocation rules for each scanned domain.</li>
+              <li>Publish each domain's script.</li>
+              <li>Implement each script separately.</li>
+            </ol>
+          </div>
+        </div>
+        <p style="margin-top:28px"><a class="link-arrow"
+            href="https://developer.onetrust.com/onetrust/docs/bulk-domain-management" target="_blank"
+            rel="noopener noreferrer">Read the setup steps <span aria-hidden="true">→</span></a></p>
+      </div>
+    </section>
+
+    <!-- 4. BENEFITS -->
+    <section id="benefits" style="padding-top:0">
+      <div class="container">
+        <div class="sec-top rv"><span class="label"><b>(03)</b> Benefits</span><span class="label">Multi-site
+            rollout</span></div>
+        <h2 class="rv" style="margin-bottom:clamp(40px,6vw,72px);max-width:14ch">Simplify a multi-site CMP rollout</h2>
+        <ul class="rows">
+          <li class="row rv"><span class="label">(A)</span>
+            <h3>Less script maintenance</h3>
+            <p>Manage similar websites through a shared parent script.</p>
+          </li>
+          <li class="row rv"><span class="label">(B)</span>
+            <h3>Consistent configuration</h3>
+            <p>Grouped domains inherit the parent's templates and geolocation rules.</p>
+          </li>
+          <li class="row rv"><span class="label">(C)</span>
+            <h3>Domain-specific choices</h3>
+            <p>A visitor's consent on one grouped domain does not automatically carry to another.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. CONSENT DEMO (dark band) -->
+    <section class="band-dark" id="demo">
+      <div class="container">
+        <div class="sec-top rv"><span class="label"><b style="color:#fff">(04)</b> Try it</span><span
+            class="label">Interactive</span></div>
+        <h2 class="rv" style="max-width:15ch">The script is shared. <span class="grad">The consent is not.</span></h2>
+        <p class="lead rv" style="margin-top:20px">Record a choice on any site below. Only that domain changes.</p>
+
+        <div class="script-tag rv" aria-hidden="true">&lt;script src="…/otSDKStub.js"
+          data-domain-script="<b>parent-domain-id</b>"&gt;&lt;/script&gt; <span style="color:#A1A1A6">— loaded on every
+            card</span></div>
+        <div class="demo" id="demo-grid"></div>
+        <div class="demo-foot">
+          <span id="simStatus" role="status" aria-live="polite">Choose Accept or Reject on any site.</span>
+          <button class="btn btn-line btn-sm" id="simReset" type="button"><span>Reset</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. FIT CHECK -->
+    <section id="fit">
+      <div class="container">
+        <div class="sec-top rv"><span class="label"><b>(05)</b> Is it a good fit?</span><span
+            class="label">Self-check</span></div>
+        <h2 class="rv" style="max-width:13ch">Built for similar sites, not every site</h2>
+        <p class="lead rv" style="margin:24px 0 clamp(40px,5vw,64px)">Consider a domain group when you manage many
+          domains with the same or similar tracking technologies and can use the same parent configuration.</p>
+
+        <div class="fit">
+          <form class="panel rv" id="fitForm" aria-describedby="fitNote">
+            <fieldset>
+              <legend>My sites…</legend>
+              <label class="opt"><input type="checkbox" name="p" value="similar" /><span>Use the same or similar
+                  tracking technologies<small>For example, the same tag manager container and
+                    tags</small></span></label>
+              <label class="opt"><input type="checkbox" name="p" value="shared" /><span>Can share one template and set
+                  of geolocation rules</span></label>
+              <label class="opt"><input type="checkbox" name="p" value="many" /><span>Are numerous enough that separate
+                  scripts are hard to manage</span></label>
+            </fieldset>
+            <fieldset>
+              <legend>Some of my sites need…</legend>
+              <label class="opt"><input type="checkbox" name="n" value="brand" /><span>Their own branding or banner
+                  design</span></label>
+              <label class="opt"><input type="checkbox" name="n" value="scan" /><span>A cookie list or Auto-Blocking
+                  sources based on their own scan</span></label>
+              <label class="opt"><input type="checkbox" name="n" value="persist" /><span>Consent that persists across
+                  related subdomains</span></label>
+              <label class="opt"><input type="checkbox" name="n" value="local" /><span>Download to Local (self-hosted
+                  scripts)</span></label>
+            </fieldset>
+          </form>
+          <aside class="result rv" id="fitResult" data-state="idle" aria-live="polite">
+            <span class="label">Indication</span>
+            <h3 id="fitTitle">Start ticking</h3>
+            <div class="meter" aria-hidden="true"><i id="fitMeter"></i></div>
+            <p id="fitText">Your selection will show whether a domain group is worth exploring.</p>
+            <p id="fitNote" style="font-size:14px;color:var(--ink-3)">A guide only. Confirm the approach against current
+              product documentation.</p>
+            <a class="link-arrow" href="#considerations">Review the considerations <span aria-hidden="true">→</span></a>
+          </aside>
+        </div>
+
+        <div class="hostcheck rv" id="assess">
+          <div>
+            <h3>Hostname match check</h3>
+            <p style="margin:0 0 18px;color:var(--ink-2);font-size:16px">Grouped hostnames are matched exactly against
+              <code>window.location.hostname</code>. Add each hostname you need, including <code>www</code> and other
+              subdomains, individually.
+            </p>
+            <div class="field">
+              <label for="groupList">Domain group list (one per line)</label>
+              <textarea id="groupList" spellcheck="false">example.com
+shop.example.com
+example.co.uk</textarea>
+            </div>
+          </div>
+          <div>
+            <div class="field">
+              <label for="testHost">Page URL or hostname to test</label>
+              <input id="testHost" type="text" value="https://www.example.com/checkout" spellcheck="false"
+                autocomplete="off" />
+            </div>
+            <div class="host-out" id="hostOut" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONSIDERATIONS -->
+    <section id="considerations" style="padding-top:0">
+      <div class="container">
+        <div class="sec-top rv"><span class="label"><b>(06)</b> Important considerations</span><span
+            class="label">Parent controls</span></div>
+        <h2 class="rv" style="margin-bottom:clamp(40px,6vw,72px);max-width:14ch">Know what the parent domain controls
+        </h2>
+        <ol class="list">
+          <li class="rv">The parent domain must be scanned in OneTrust.</li>
+          <li class="rv">The preference center cookie list and Auto-Blocking sources are based on the parent domain
+            scan.</li>
+          <li class="rv">Templates and geolocation rules are inherited; individual domain branding is not supported.
+          </li>
+          <li class="rv">Dashboard metrics and consent records for grouped domains appear under the parent domain.</li>
+          <li class="rv">Download to Local is not compatible with Bulk Domain Management.</li>
+          <li class="rv">Add each required hostname, including subdomains, individually.</li>
+          <li class="rv">Publish the parent's production script after creating or updating the group.</li>
+          <li class="rv">Extra tags on a single site can be conditioned on OnetrustActiveGroups, since
+            categories come from the parent.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 8. REFERENCES -->
+    <section id="resources" style="padding-top:0">
+      <div class="container">
+        <div class="sec-top rv"><span class="label"><b>(07)</b> References</span><span class="label">Go deeper</span>
+        </div>
+        <ul class="refs">
+          <li class="rv"><a href="https://developer.onetrust.com/onetrust/docs/bulk-domain-management" target="_blank"
+              rel="noopener noreferrer"><span class="label">Developer Portal</span><span><b>Bulk Domain Management
+                  guide</b><small>Official setup, deployment and validation steps.</small></span><span class="go"
+                aria-hidden="true">→</span></a></li>
+          <li class="rv"><a href="https://developer.onetrust.com/onetrust/reference/createdomaingroupusingpost"
+              target="_blank" rel="noopener noreferrer"><span class="label">API reference</span><span><b>Create Domain
+                  Group API</b><small>Endpoint to create or update a domain group.</small></span><span class="go"
+                aria-hidden="true">→</span></a></li>
+          <li class="rv"><a
+              href="https://onetrust-my.sharepoint.com/personal/utsav_singh_onetrust_com/_layouts/15/stream.aspx?id=%2Fpersonal%2Futsav%5Fsingh%5Fonetrust%5Fcom%2FDocuments%2FRecordings%2FKnowledge%20Session%20on%20Bulk%20Domain%20Management%2D20260320%5F133317%2DMeeting%20Recording%2Emp4&amp;referrer=StreamWebApp%2EWeb&amp;referrerScenario=AddressBarCopied%2Eview%2Ee0566741%2Dcb90%2D4c69%2Da922%2D5bbc89d9658d"
+              target="_blank" rel="noopener noreferrer"><span class="label tag-int">Internal ·
+                Recording</span><span><b>Knowledge Session on Bulk Domain Management</b><small>Walkthrough of the
+                  concept, API setup and validation.</small></span><span class="go" aria-hidden="true">→</span></a></li>
+          <li class="rv"><a href="https://zentrust.atlassian.net/wiki/x/zwBVzAE" target="_blank"
+              rel="noopener noreferrer"><span class="label tag-int">Internal · Confluence</span><span><b>Bulk Domain
+                  Management</b><small>Professional Services: CMP technical resources.</small></span><span class="go"
+                aria-hidden="true">→</span></a></li>
+          <li class="rv"><a href="https://zentrust.atlassian.net/wiki/x/1YHhzwE" target="_blank"
+              rel="noopener noreferrer"><span class="label tag-int">Internal · Confluence</span><span><b>Limitations
+                  &amp; Live examples</b><small>Known limitations, metrics behaviour and group
+                  changes.</small></span><span class="go" aria-hidden="true">→</span></a></li>
+          <li class="rv"><a href="https://ideas.onetrust.com/ideas/OT-I-16661" target="_blank"
+              rel="noopener noreferrer"><span class="label">Ideas portal</span><span><b>Hostname matching
+                  idea</b><small>Related idea on root vs www hostname matching.</small></span><span class="go"
+                aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9. FINAL CTA -->
+    <section class="final" id="final">
+      <div class="big" id="bigText" aria-hidden="true">Simplify <span>consent</span> across sites</div>
+      <div class="container final-grid">
+        <div>
+          <span class="label"><b>(08)</b> Next step</span>
+          <h2 style="margin:18px 0;max-width:16ch">Ready to simplify consent management across similar sites?</h2>
+          <p class="lead" style="margin:0">Check whether your domains share the configuration needed for a domain group,
+            then follow the implementation guide to plan and validate deployment.</p>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-dark mag" href="https://developer.onetrust.com/onetrust/docs/bulk-domain-management"
+            target="_blank" rel="noopener noreferrer"><span>View implementation documentation</span> <span class="arr"
+              aria-hidden="true">→</span><span class="sr-only">(opens in new tab)</span></a>
+          <a class="btn btn-line mag" href="#fit"><span>Assess my domains</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <span>Informational overview of OneTrust Bulk Domain Management. Verify wording against current product
+          documentation before publishing.</span>
+        <a href="#top">Back to top ↑</a>
+      </div>
+      <div class="wordmark" aria-hidden="true">Bulk <span class="grad">Domains</span></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const fine = matchMedia('(pointer: fine)').matches;
+      const hasGSAP = !!(window.gsap && window.ScrollTrigger);
+
+      /* ---------- Preloader ---------- */
+      const html = document.documentElement;
+      const finish = () => html.classList.add('loaded');
+      if (reduce) finish();
+      else {
+        const c = $('#ldCount'), bar = $('#ldBar'); const t0 = performance.now(), D = 1100;
+        const tick = now => {
+          const p = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - p, 3);
+          c.textContent = Math.round(e * 100); bar.style.width = e * 100 + '%';
+          p < 1 ? requestAnimationFrame(tick) : setTimeout(finish, 150);
+        };
+        requestAnimationFrame(tick);
+        setTimeout(finish, 2500); // safety
+      }
+
+      /* ---------- Lenis smooth scroll ---------- */
+      let lenis = null;
+      if (window.Lenis && !reduce) {
+        lenis = new Lenis({ duration: 1.1, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        if (hasGSAP) {
+          gsap.registerPlugin(ScrollTrigger);
+          lenis.on('scroll', ScrollTrigger.update);
+          gsap.ticker.add(t => lenis.raf(t * 1000));
+          gsap.ticker.lagSmoothing(0);
+        } else {
+          const raf = t => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf);
+        }
+      } else if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
+
+      $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+        const id = a.getAttribute('href'); const t = id.length > 1 && $(id); if (!t) return;
+        e.preventDefault();
+        lenis ? lenis.scrollTo(t, { offset: -84 }) : t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+        nav.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false');
+        history.replaceState(null, '', id);
+      }));
+
+      /* ---------- Nav: hide on scroll down, morphing hover pill ---------- */
+      const nav = $('#nav'), pill = $('#navPill'), menuBtn = $('#menuBtn');
+      let lastY = 0;
+      addEventListener('scroll', () => {
+        const y = scrollY; nav.classList.toggle('hide', y > lastY && y > 400 && !nav.classList.contains('open')); lastY = y;
+      }, { passive: true });
+      const links = $$('#navLinks a');
+      links.forEach(a => {
+        const move = () => { pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; pill.style.opacity = 1; };
+        a.addEventListener('mouseenter', move); a.addEventListener('focus', move);
+      });
+      $('#navLinks').addEventListener('mouseleave', () => pill.style.opacity = 0);
+      menuBtn.addEventListener('click', () => { const o = nav.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', o); });
+
+      /* ---------- Custom cursor + magnetic buttons ---------- */
+      if (fine && !reduce) {
+        const cur = $('#cursor'); let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
+        addEventListener('pointermove', e => { x = e.clientX; y = e.clientY; }, { passive: true });
+        (function loop() { cx += (x - cx) * .2; cy += (y - cy) * .2; cur.style.transform = `translate(${cx}px,${cy}px)`; requestAnimationFrame(loop); })();
+        $$('a,button,input,label.opt').forEach(el => {
+          el.addEventListener('mouseenter', () => cur.classList.add('big'));
+          el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+        });
+        $$('.mag').forEach(b => {
+          b.addEventListener('pointermove', e => {
+            const r = b.getBoundingClientRect(); const dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2;
+            b.style.transform = `translate(${dx * .18}px,${dy * .3}px)`;
+          });
+          b.addEventListener('pointerleave', () => b.style.transform = '');
+        });
+      }
+
+      /* ---------- Reveal on scroll ---------- */
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+      $$('.rv').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 80 + 'ms'; io.observe(el); });
+
+      /* ---------- Scrubbed statement (Apple-style word reveal) ---------- */
+      const st = $('#statement');
+      if (!reduce) {
+        st.innerHTML = st.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
+        const words = $$('.w', st);
+        if (hasGSAP) {
+          gsap.to(words, { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: st, start: 'top 80%', end: 'bottom 45%', scrub: true } });
+        } else {
+          const upd = () => {
+            const r = st.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (innerHeight * .8 - r.top) / (r.height + innerHeight * .35)));
+            words.forEach((w, i) => w.style.opacity = i / words.length < p ? 1 : .16);
+          };
+          addEventListener('scroll', upd, { passive: true }); upd();
+        }
+      } else st.classList.add('no-split');
+
+      /* ---------- GSAP scroll effects ---------- */
+      if (hasGSAP && !reduce) {
+        gsap.to('#heroInner', { scale: .92, opacity: .15, yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+        gsap.to('.aurora', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+        gsap.fromTo('#bigText', { xPercent: 8 }, { xPercent: -38, ease: 'none', scrollTrigger: { trigger: '#final', start: 'top bottom', end: 'bottom top', scrub: true } });
+      }
+
+      /* ---------- Sticky story: beam states ---------- */
+      const svg = $('#beamSvg'), cap = $('#stageCap'), lbl = $('#stageLbl');
+      const caps = {
+        1: 'The parent domain is scanned. Its published script and configuration serve the group.',
+        2: 'Hostnames are associated with the parent script through the API. One script now serves the group.',
+        3: 'Each grouped domain records its own consent. A choice on one site does not carry to another.'
+      };
+      const setStep = n => {
+        svg.setAttribute('class', [1, 2, 3].filter(i => i <= n).map(i => 's' + i).join(' '));
+        cap.textContent = caps[n]; lbl.textContent = `Step 0${n} / 03`;
+        $$('.step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
+      };
+      const mobile = matchMedia('(max-width: 900px)');
+      if (mobile.matches || reduce) setStep(3);
+      const sio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !mobile.matches) setStep(+e.target.dataset.step); }), { rootMargin: '-45% 0px -45% 0px' });
+      $$('.step').forEach(s => sio.observe(s));
+
+      /* ---------- Morphing tabs ---------- */
+      const tabs = $$('[role=tab]'), tabPill = $('#tabPill');
+      const placePill = t => { tabPill.style.left = t.offsetLeft + 'px'; tabPill.style.width = t.offsetWidth + 'px'; };
+      const select = (t, focus = true) => {
+        tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; $('#' + x.getAttribute('aria-controls')).hidden = !on; });
+        placePill(t); if (focus) t.focus();
+      };
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => select(t));
+        t.addEventListener('keydown', e => {
+          const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+          if (k) { e.preventDefault(); select(tabs[(i + k + tabs.length) % tabs.length]); }
+          if (e.key === 'Home') { e.preventDefault(); select(tabs[0]); }
+          if (e.key === 'End') { e.preventDefault(); select(tabs.at(-1)); }
+        });
+      });
+      const syncPill = () => placePill($('[role=tab][aria-selected=true]'));
+      syncPill(); addEventListener('resize', syncPill); document.fonts && document.fonts.ready.then(syncPill);
+
+      $$('.copy').forEach(b => b.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText($('#' + b.dataset.copy).innerText); b.textContent = 'Copied'; }
+        catch { b.textContent = 'Select & copy'; }
+        setTimeout(() => b.textContent = 'Copy', 1600);
+      }));
+
+      /* ---------- Script counter ---------- */
+      const range = $('#siteCount'), out = $('#siteOut'), bn = $('#beforeNum'), bd = $('#beforeDots');
+      const upd = () => { const n = +range.value; out.textContent = n; bn.textContent = n; bd.innerHTML = '<i></i>'.repeat(n); };
+      range.addEventListener('input', upd); upd();
+
+      /* ---------- Consent demo (spotlight cards) ---------- */
+      const sites = ['parent-domain.com', 'site-b.com', 'site-c.co.uk', 'shop.site-d.com'];
+      const grid = $('#demo-grid'), status = $('#simStatus');
+      const render = () => {
+        grid.innerHTML = sites.map((s, i) => `
+      <div class="spot" data-i="${i}">
+        <span class="label">${i === 0 ? 'Parent' : 'Grouped'}</span>
+        <div class="host" style="margin-top:8px">${s}</div>
+        <span class="state"><i></i><span class="lbl">No choice</span></span>
+        <div class="acts">
+          <button class="chipbtn" type="button" data-act="accepted" aria-label="Accept on ${s}">Accept</button>
+          <button class="chipbtn" type="button" data-act="rejected" aria-label="Reject on ${s}">Reject</button>
+        </div>
+      </div>`).join('');
+      };
+      render();
+      grid.addEventListener('pointermove', e => {
+        const c = e.target.closest('.spot'); if (!c) return; const r = c.getBoundingClientRect();
+        c.style.setProperty('--x', e.clientX - r.left + 'px'); c.style.setProperty('--y', e.clientY - r.top + 'px');
+      });
+      grid.addEventListener('click', e => {
+        const b = e.target.closest('[data-act]'); if (!b) return;
+        const c = b.closest('.spot'), act = b.dataset.act;
+        c.classList.remove('accepted', 'rejected'); c.classList.add(act);
+        $('.lbl', c).textContent = act === 'accepted' ? 'Accepted' : 'Rejected';
+        const untouched = $$('.spot', grid).filter(x => !x.classList.contains('accepted') && !x.classList.contains('rejected')).length;
+        status.textContent = `Consent ${act} on ${sites[c.dataset.i]} only. ${untouched} other domain${untouched === 1 ? '' : 's'} still show no choice.`;
+      });
+      $('#simReset').addEventListener('click', () => { render(); status.textContent = 'Reset. Choose Accept or Reject on any site.'; });
+
+      /* ---------- Fit checker ---------- */
+      const form = $('#fitForm'), res = $('#fitResult'), title = $('#fitTitle'), text = $('#fitText'), meter = $('#fitMeter');
+      const needs = { brand: 'own branding', scan: 'a site-specific scan', persist: 'consent across subdomains', local: 'Download to Local' };
+      form.addEventListener('change', () => {
+        const pos = $$('input[name=p]:checked', form).length;
+        const neg = $$('input[name=n]:checked', form).map(i => needs[i.value]);
+        let state = 'idle', w = 0;
+        if (!pos && !neg.length) { title.textContent = 'Start ticking'; text.textContent = 'Your selection will show whether a domain group is worth exploring.'; }
+        else if (neg.length) {
+          state = 'other'; w = 20; title.textContent = 'Review another approach';
+          text.textContent = `Sites that need ${neg.join(', ')} are better served outside a domain group. For consent across related subdomains, see the standalone root-domain approach in the documentation.`;
+        }
+        else if (pos === 3) {
+          state = 'good'; w = 100; title.textContent = 'Looks like a strong fit';
+          text.textContent = 'Your sites share tracking technologies and configuration, and have enough scale to benefit. Plan a parent domain and validate on a few hostnames first.';
+        }
+        else {
+          state = 'review'; w = 55; title.textContent = 'Worth exploring';
+          text.textContent = "Some signals point to a domain group. Confirm that every site can use the parent's template, geolocation rules and cookie list.";
+        }
+        res.dataset.state = state; meter.style.setProperty('--w', w + '%');
+      });
+
+      /* ---------- Hostname matcher ---------- */
+      const list = $('#groupList'), host = $('#testHost'), hostOut = $('#hostOut');
+      const toHost = v => { v = v.trim(); if (!v) return ''; try { return new URL(/^https?:\/\//i.test(v) ? v : 'https://' + v).hostname.toLowerCase(); } catch { return v.toLowerCase(); } };
+      const check = () => {
+        const hosts = list.value.split(/\n|,/).map(toHost).filter(Boolean), h = toHost(host.value);
+        if (!h) { hostOut.className = 'host-out'; hostOut.textContent = 'Enter a URL or hostname.'; return; }
+        if (hosts.includes(h)) { hostOut.className = 'host-out ok'; hostOut.textContent = `✓ "${h}" matches the group list exactly.`; return; }
+        const near = hosts.find(x => x === h.replace(/^www\./, '') || x === 'www.' + h);
+        hostOut.className = 'host-out no';
+        hostOut.textContent = `✕ "${h}" is not in the list.` + (near ? ` "${near}" is listed, but hostnames must match exactly. Add "${h}" as well.` : ' Add this hostname to the group.');
+      };
+      list.addEventListener('input', check); host.addEventListener('input', check); check();
+    });
+  </script>
+</body>
+
+</html>
